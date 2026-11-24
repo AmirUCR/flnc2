@@ -1,6 +1,8 @@
-data/output/
-data/cache/
-data/input/
+/data/output/
+/data/cache/
+/data/input/
+/data/model/
+/dist/
 __pycache__
 unused
 cv/

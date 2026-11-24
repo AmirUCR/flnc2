@@ -1,0 +1,59 @@
+Flnc2 external tools
+====================
+
+This archive contains third-party software and data used by Flnc2 to assess
+the coding potential of candidate transcripts. Flnc2 downloads it on first
+use; it is not part of the Flnc2 source code. Each component remains under
+the terms of its original authors. If you use Flnc2 in published work,
+please also cite the tools below.
+
+Files are redistributed unmodified.
+
+
+1. CPAT: Coding-Potential Assessment Tool
+-----------------------------------------
+Files:     cpat/Human_Hexamer.tsv
+           cpat/Human_logitModel.RData
+           cpat/Human_cutoff.txt
+           cpat/Mouse_Hexamer.tsv
+           cpat/Mouse_logitModel.RData
+           cpat/Mouse_cutoff.txt
+           cpat/LICENSE
+Version:   3.0.5
+Source:    https://sourceforge.net/projects/rna-cpat/
+License:   GNU General Public License version 2.0 (GPLv2); see cpat/LICENSE.
+           The CPAT program itself is installed separately (bioconda: cpat).
+Citation:  Wang L, Park HJ, Dasari S, Wang S, Kocher JP, Li W.
+           CPAT: Coding-Potential Assessment Tool using an alignment-free
+           logistic regression model.
+           Nucleic Acids Research. 2013;41(6):e74. doi:10.1093/nar/gkt006
+
+
+2. LGC 2.0: ORF Length and GC content
+-------------------------------------
+Files:     lgc2/LGC-2.0.py
+Version:   2.0
+Source:    http://bigd.big.ac.cn/biocode/tools/BT000004
+           Web server: http://bigd.big.ac.cn/lgc/calculator
+License:   No license file is distributed with LGC 2.0. Copyright remains
+           with the authors.
+Citation:  Wang G, Yin H, Li B, Yu C, Wang F, Xu X, Cao J, Bao Y, Wang L,
+           Abbasi AA, Bajic VB, Ma L, Zhang Z.
+           Characterization and identification of long non-coding RNAs
+           based on feature relationship.
+           Bioinformatics. 2019;35(17):2949-2956.
+           doi:10.1093/bioinformatics/btz008
+
+
+3. ORFfinder (standalone, Linux x86-64)
+---------------------------------------
+Files:     lgc2/ORFfinder
+Version:   0.4.3
+Source:    https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/ORFfinder/linux-i64/
+           https://www.ncbi.nlm.nih.gov/orffinder/
+Author:    National Center for Biotechnology Information (NCBI),
+           U.S. National Library of Medicine.
+License:   Developed by NCBI, a U.S. Government agency. See NCBI's policies
+           at https://www.ncbi.nlm.nih.gov/home/about/policies/
+Note:      Distributed by NCBI as a prebuilt binary for Linux x86-64 only.
+           Used by LGC 2.0 to find open reading frames.

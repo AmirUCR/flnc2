@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flnc2"
+version = "0.1.0"
+description = "Identification of lncRNAs from RNA-seq data using deep learning"
+readme = "README.md"
+license = "MIT"                  # placeholder: set your actual license
+license-files = ["LICENSE"]
+requires-python = ">=3.12"       # PipelineStep[T] syntax needs 3.12+
+authors = [{ name = "Amir Mohseni", email = "amirsadra.mohseni1@umassmed.edu" }]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "biopython",
+    "pybedtools",
+    "gffutils",
+    "pyfaidx",
+    "scikit-learn",
+    "tensorflow>=2.16",
+]
+
+[project.scripts]
+flnc2 = "flnc2.main:main"
+flnc2-cv = "flnc2.tools.cv_harness:main"
+
+[project.urls]
+Homepage = "https://github.com/AmirUCR/flnc2"
+
+# Layout: src/flnc2/... Non-Python files inside the package directory
+# (default config, bundled model, etc.) are included in the wheel.
+[tool.hatch.build.targets.wheel]
+packages = ["src/flnc2"]

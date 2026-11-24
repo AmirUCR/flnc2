@@ -1,0 +1,68 @@
+{% set name = "flnc2" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/AmirUCR/flnc2/archive/refs/tags/externals-v1.tar.gz
+  sha256: cde8ec88af6d93d1b41e6a8e4272c4c9767f844679512e362b51b3f007781ad5   # curl -sL <url> | sha256sum
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vvv
+  entry_points:
+    - flnc2 = flnc2.main:main
+    - flnc2-cv = flnc2.tools.cv_harness:main
+  run_exports:
+    - {{ pin_subpackage(name, max_pin="x.x") }}
+
+requirements:
+  host:
+    - python >=3.12
+    - pip
+    - hatchling
+  run:
+    - python >=3.12
+    # Python libraries
+    - numpy
+    - pandas
+    - scipy
+    - matplotlib-base
+    - pyyaml
+    - biopython
+    - pybedtools
+    - gffutils
+    - pyfaidx
+    - scikit-learn
+    - tensorflow >=2.16
+    # Command-line tools, all in the same env, so no *_env options are needed
+    - bedtools
+    - cpat
+    - hisat2
+    - samtools
+    - seqtk
+    - stringtie
+    - subread
+    - rseqc
+
+test:
+  imports:
+    - flnc2
+  commands:
+    - flnc2 --help
+    - flnc2-cv --help
+
+about:
+  home: https://github.com/AmirUCR/flnc2
+  license: MIT                  # match pyproject.toml
+  license_family: MIT
+  license_file: LICENSE
+  summary: Identification of lncRNAs from RNA-seq data using deep learning
+  dev_url: https://github.com/AmirUCR/flnc2
+
+extra:
+  recipe-maintainers:
+    - AmirUCR

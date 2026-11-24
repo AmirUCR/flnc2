@@ -1,0 +1,77 @@
+# Config file for Flnc2.
+# Command-line options take precedence over this file. For example,
+# `flnc2 --experiment_name amirs_exp` overrides experiment_name below.
+# Empty values ("") mean "not set".
+
+# ===============================================================
+# Basic Settings
+# ===============================================================
+experiment_name: "flnc2_output"
+threads: 64
+quiet: false  # true: only show warnings and errors.
+
+# Allowed values: "human", "mouse"
+species: "mouse"
+min_length: 200     # Min length for a lncRNA. Transcripts shorter than this are discarded.
+min_exon_length: 2  # Transcripts with any exon shorter than this are discarded.
+canonical_re: "^(chr)?([0-9]+|X|Y|M|MT)$"  # Canonical chromosome names. Covers UCSC/GENCODE (chr1) and Ensembl (1).
+
+# Feature extraction. Both must match the values the model was trained with.
+promoter_length: 1000  # Length of the region upstream of each transcript's TSS used for promoter k-mers.
+k: 6                   # k-mer size for transcript and promoter k-mer counts.
+
+# ---------------------------------------------------------------
+# Input Settings
+# ---------------------------------------------------------------
+# Genome FASTA and GTF. Must be the same assembly.
+genome: "~/projects/research/amirs_archives_hdd/genomic/GRCm38/genome/GRCm38.primary_assembly.genome.fa"
+gtf: "~/projects/research/amirs_archives_hdd/genomic/GRCm38/genome/gencode.vM10.primary_assembly.annotation.gtf"
+get_genome: false  # true: download GENCODE mouse M10 (GRCm38) into cache_dir for whichever of genome/gtf is empty.
+
+# Inference input: set exactly one of these.
+bed: ""      # BED12 of candidate transcripts. Skips alignment and assembly.
+samples: ""  # Sample sheet (sample_id, condition, r1, r2) pointing to .fastq.gz reads. Runs the full pipeline.
+
+# ---------------------------------------------------------------
+# Path Settings
+# ---------------------------------------------------------------
+output_dir: "data/output"  # Each run creates <output_dir>/<experiment_name>, or <experiment_name>_N if it exists.
+resume_dir: ""             # Reuse an existing run directory instead of creating a new one. Overrides output_dir.
+
+# ---------------------------------------------------------------
+# Machine Learning
+# ---------------------------------------------------------------
+mode: "inference"  # "inference" or "train"
+
+# Train: BED12 with a header row plus one 0/1 label column named by label_col (13 columns).
+# The trained model is written to <output_dir>/<experiment_name>/model/.
+train_bed: ""
+label_col: "H3K4me3"
+epochs: 2  # Required for train. tools/cv_harness.py reports a recommended value.
+
+# ---------------------------------------------------------------
+# External Tools
+# ---------------------------------------------------------------
+# Conda environments. Leave empty to use the current env.
+hisat2_env: "heart_env"   # HISAT2, samtools, seqtk
+rseqc_env: ""             # infer_experiment.py
+subread_env: "heart_env"  # featureCounts
+stringtie_env: ""         # StringTie
+cpat_env: ""              # CPAT
+lgc_env: ""               # LGC 2.0
+
+# HISAT2 (samples input only)
+hisat2_index: ""  # Your own HISAT2 index prefix. Empty: build one in cache_dir.
+# Building with splice sites needs ~160 GB RAM on a mammalian genome (vs ~8 GB without).
+# Splice sites are still used at alignment time either way.
+hisat2_use_splice_sites: false
+
+# Strandedness for HISAT2, StringTie and featureCounts (samples input only).
+# "F", "R", "FR", "RF" or "unstranded". Empty: inferred per sample.
+# Do not pass --fr/--rf to StringTie through the args below.
+strandedness: ""
+stranded_threshold: 0.8  # Fraction of reads that must agree to call a sample stranded, in (0.5, 1].
+
+# Extra StringTie options (samples input only). -o, -G, -p, -l, --fr, --rf and --merge are set by Flnc2.
+stringtie_assembly_args: "-m 200 -c 1 -f 0 -a 10 -j 1 -M 1 -g 50"
+stringtie_merge_args: "-F 0 -g 0 -f 0 -i -m 0 -T 0 -c 0"
