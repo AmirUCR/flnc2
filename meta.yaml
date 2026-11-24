@@ -38,7 +38,6 @@ requirements:
     - pyfaidx
     - scikit-learn
     - tensorflow >=2.16
-    # Command-line tools, all in the same env, so no *_env options are needed
     - bedtools
     - cpat
     - hisat2
