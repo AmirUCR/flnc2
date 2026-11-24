@@ -1,0 +1,6 @@
+data/output/
+data/cache/
+data/input/
+__pycache__
+unused
+cv/
