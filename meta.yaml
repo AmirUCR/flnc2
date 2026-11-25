@@ -1,13 +1,14 @@
 {% set name = "flnc2" %}
 {% set version = "0.1.0" %}
+{% set python_min = "3.12" %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://github.com/AmirUCR/flnc2/archive/refs/tags/externals-v1.tar.gz
-  sha256: cde8ec88af6d93d1b41e6a8e4272c4c9767f844679512e362b51b3f007781ad5   # curl -sL <url> | sha256sum
+  url: https://github.com/AmirUCR/flnc2/archive/refs/tags/v0.1.0.tar.gz
+  sha256: 9d0abdea84270d0f73dbdefc67cb86193bd052fac75c79bb173e7797d1b43624   # curl -sL <url> | sha256sum
 
 build:
   number: 0
@@ -19,13 +20,14 @@ build:
   run_exports:
     - {{ pin_subpackage(name, max_pin="x.x") }}
 
+
 requirements:
   host:
-    - python >=3.12
+    - python {{ python_min }}
     - pip
     - hatchling
   run:
-    - python >=3.12
+    - python >={{ python_min }}
     # Python libraries
     - numpy
     - pandas
@@ -39,7 +41,7 @@ requirements:
     - scikit-learn
     - tensorflow >=2.16
     - bedtools
-    - cpat
+    - cpat >=3
     - hisat2
     - samtools
     - seqtk
@@ -48,11 +50,17 @@ requirements:
     - rseqc
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - flnc2
   commands:
     - flnc2 --help
     - flnc2-cv --help
+    - cpat --help
+    - stringtie --version
+    - featureCounts -v
+    - hisat2 --version
 
 about:
   home: https://github.com/AmirUCR/flnc2
@@ -65,3 +73,4 @@ about:
 extra:
   recipe-maintainers:
     - AmirUCR
+    

@@ -32,7 +32,7 @@ BED12_COLS = ("chrom", "chromStart", "chromEnd", "name", "score", "strand",
 ENV_FLAGS = ("hisat2_env", "rseqc_env", "stringtie_env", "subread_env", "cpat_env", "lgc_env")
 
 # Options where an empty value ("" in YAML) means "not set".
-_OPTIONAL = ("experiment_name", "bed", "samples", "gtf", "genome", "train_bed",
+_OPTIONAL = ("output_filename", "bed", "samples", "gtf", "genome", "train_bed",
              "hisat2_index", "resume_dir", "model_dir", "cache_dir", "output_dir", "external_dir",
              "strandedness", "stringtie_assembly_args", "stringtie_merge_args", *ENV_FLAGS)
 
@@ -167,7 +167,7 @@ class Configurator:
         g_general.add_argument("--soundcheck", action="store_true", help="Run all configuration checks, then exit without running anything.")
         g_general.add_argument("--clean_cache", action="store_true", help="Delete the Flnc2 cache directory (downloaded references, external tools, HISAT2 index, GTF databases) and exit. Run this before uninstalling to free the space.")
         g_general.add_argument("--quiet", action="store_true", help="Only show warnings and errors.")
-        g_general.add_argument("--experiment_name", type=str, default=None, help="Name of the experiment.")
+        g_general.add_argument("--output_filename", type=str, default=None, help="Name of the output folder.")
         g_general.add_argument("--threads", type=int, default=1, help="Number of threads to use throughout the program.")
         g_general.add_argument("--species", type=str, default="mouse", help="Which species are we working with? Valid are ['human', 'mouse']")
         g_general.add_argument("--min_length", type=int, default=200, help="Minimum lncRNA transcript length. Transcripts shorter than this are discarded.")
@@ -269,8 +269,8 @@ class Configurator:
 
     def _check_general(self) -> None:
         a = self.args
-        a.experiment_name = sanitize_filename(a.experiment_name)
-        logger.info("  Starting pipeline with name %s.", a.experiment_name)
+        a.output_filename = sanitize_filename(a.output_filename)
+        logger.info("  Starting pipeline with name %s.", a.output_filename)
 
         a.mode = str(a.mode).strip().lower()
         if a.mode not in MODES:
@@ -533,7 +533,7 @@ class Configurator:
             a.output_dir = path
             logger.info("  Using existing output dir at %s (via --resume_dir)", path)
         else:
-            a.output_dir = self.create_output_dir(a.output_dir or "data/output", a.experiment_name)
+            a.output_dir = self.create_output_dir(a.output_dir or "data/output", a.output_filename)
 
     def _clean_cache(self) -> None:
         cache = self.args.cache_dir
@@ -595,9 +595,9 @@ class Configurator:
                 value = self.samples_path   # the sample sheet, not the parsed Sample objects
             used[key] = self._plain(value)
 
-        path = Path(a.output_dir) / f"{a.experiment_name}_config_used.yaml"
+        path = Path(a.output_dir) / f"{a.output_filename}_config_used.yaml"
         with path.open("w") as f:
-            f.write(f"# Options used for Flnc2 experiment {a.experiment_name}\n")
+            f.write(f"# Options used for Flnc2 experiment {a.output_filename}\n")
             f.write(f"# Written {datetime.now().astimezone().isoformat(timespec='seconds')}\n")
             f.write(f"# Config file: {a.config or 'none (command line and built-in defaults)'}\n")
             yaml.safe_dump(used, f, sort_keys=False, default_flow_style=False)
@@ -653,8 +653,8 @@ class Configurator:
             with (out / "run_time.txt").open("a") as f:
                 f.write(f"Flnc2 experiment took {took}.\n")
 
-    def create_output_dir(self, output_dir: str | Path, experiment_name: str) -> Path:
-        base = Path(output_dir).expanduser().resolve() / experiment_name
+    def create_output_dir(self, output_dir: str | Path, output_filename: str) -> Path:
+        base = Path(output_dir).expanduser().resolve() / output_filename
         dir_name, i = base, 1
         while dir_name.exists():
             dir_name = base.with_name(f"{base.name}_{i}")

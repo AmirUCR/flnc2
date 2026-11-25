@@ -6,7 +6,7 @@
 # ===============================================================
 # Basic Settings
 # ===============================================================
-experiment_name: "flnc2_output"
+output_filename: "flnc2_output"
 threads: 64
 quiet: false  # true: only show warnings and errors.
 

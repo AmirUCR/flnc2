@@ -27,7 +27,7 @@ logger = get_logger()
 EXTERNALS_VERSION = "1"
 EXTERNALS_URL = (f"https://github.com/AmirUCR/flnc2/releases/download/"
                  f"externals-v{EXTERNALS_VERSION}/flnc2-externals-v{EXTERNALS_VERSION}.tar.gz")
-EXTERNALS_SHA256 = "657bf105d806cb5f8a8b41e1dbbd0595cec79fba23183ebe77f1419e79e5a315"
+EXTERNALS_SHA256 = "c2a010693612821e0f8d8f66ba318146db7cf0d729bc0bdf33ced6f457ec7e38"
 
 # Files every externals archive must contain, relative to its root.
 REQUIRED = (
@@ -40,7 +40,6 @@ REQUIRED = (
     "lgc2/LGC-2.0.py",
     "lgc2/ORFfinder",
 )
-
 
 def externals_dir(cache_dir: Path) -> Path:
     return Path(cache_dir) / "externals" / f"v{EXTERNALS_VERSION}"
